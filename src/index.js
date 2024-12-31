@@ -1,5 +1,5 @@
-const redirect = (url) => new Response(null, { status: 301, headers: { 'Location': url } })
-const website_redirect = redirect('https://virtualstreets.org')
+const redirect = (url) => new Response(null, { status: 301, headers: { 'Location': url } });
+const website_redirect = redirect('https://virtualstreets.org');
 
 export default {
   async fetch(request, env, ctx) {
