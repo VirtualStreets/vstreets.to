@@ -1,29 +1,16 @@
-const websiteUrl = 'https://virtualstreets.org';
-const redirect = (url) => new Response(`
-<!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="refresh" content="0;url=${url}">
-  <script>location.replace("${url}");</script>
-</head>
-<body style="margin:0;padding:0;background:#fff;"></body>
-</html>
-`, {
-  headers: { 'Content-Type': 'text/html' },
-  status: 200,
-});
+const redirect = (url) => new Response(null, { status: 301, headers: { 'Location': url } });
+const website_redirect = redirect('https://virtualstreets.org');
 
 export default {
   async fetch(request, env, ctx) {
     const { pathname } = new URL(request.url);
-    const slug = pathname.substring(1).toLowerCase();
-
+    const slug = pathname.substring(1);
     if (!slug) {
-      return redirect(websiteUrl);
+      return website_redirect;
     }
     try {
-      const value = await env.vstreets.get(slug);
-      return value ? redirect(value) : redirect(websiteUrl);
+      const value = await env.vstreets.get(slug.toLowerCase());
+      return value ? redirect(value) : website_redirect;
     } catch (e) {
       return new Response(e.message, { status: 500 });
     }
